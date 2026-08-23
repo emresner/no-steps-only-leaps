@@ -5,9 +5,11 @@ public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
 
+    private const string WebGLSaveKey = "no_steps_only_leaps_save_json";
+
     public SaveData Data { get; private set; }
 
-        private string SaveFilePath => Path.Combine(
+    private string SaveFilePath => Path.Combine(
         Application.persistentDataPath,
         "no_steps_only_leaps_save.json"
     );
@@ -30,6 +32,29 @@ public class SaveManager : MonoBehaviour
 
     public void Load()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        LoadFromPlayerPrefs();
+#else
+        LoadFromFile();
+#endif
+    }
+
+    public void Save()
+    {
+        EnsureDataExists();
+
+        string json = JsonUtility.ToJson(Data, true);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        PlayerPrefs.SetString(WebGLSaveKey, json);
+        PlayerPrefs.Save();
+#else
+        File.WriteAllText(SaveFilePath, json);
+#endif
+    }
+
+    private void LoadFromFile()
+    {
         if (!File.Exists(SaveFilePath))
         {
             Data = new SaveData();
@@ -38,6 +63,31 @@ public class SaveManager : MonoBehaviour
         }
 
         string json = File.ReadAllText(SaveFilePath);
+        LoadFromJson(json);
+    }
+
+    private void LoadFromPlayerPrefs()
+    {
+        if (!PlayerPrefs.HasKey(WebGLSaveKey))
+        {
+            Data = new SaveData();
+            Save();
+            return;
+        }
+
+        string json = PlayerPrefs.GetString(WebGLSaveKey);
+        LoadFromJson(json);
+    }
+
+    private void LoadFromJson(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            Data = new SaveData();
+            EnsureDataListsExist();
+            return;
+        }
+
         Data = JsonUtility.FromJson<SaveData>(json);
 
         if (Data == null)
@@ -46,14 +96,6 @@ public class SaveManager : MonoBehaviour
         }
 
         EnsureDataListsExist();
-    }
-
-    public void Save()
-    {
-        EnsureDataExists();
-
-        string json = JsonUtility.ToJson(Data, true);
-        File.WriteAllText(SaveFilePath, json);
     }
 
     public bool HasClaimedFruit(string fruitId)
