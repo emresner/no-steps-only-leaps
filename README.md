@@ -93,6 +93,7 @@ Next up: more polished projects and cleaner systems.
 
 - 🎨 Character and environment art: **Pixel Adventure 1** by **Pixel Frog**
 - 🔤 Font: **Pixelify Sans** (SIL Open Font License)
+- 🔠 Default UI font: **Liberation Sans** (SIL Open Font License), included with TextMeshPro
 - 🔊 Sound effects: made with **ChipTone** by SFBGames
 - 🖌️ UI buttons and icons: drawn by me in **Aseprite**
 - 🛠️ Built with **Unity 6** and **C#**
