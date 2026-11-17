@@ -41,13 +41,6 @@ public class CollectibleManager : MonoBehaviour
         }
 
         NotifyFruitsChanged();
-
-        Debug.Log("Run Fruits: " + CollectedCount + " / " + TotalCollectibleCount);
-
-        if (isNewPermanentFruit && SaveManager.Instance != null)
-        {
-            Debug.Log("Permanent Fruit Balance: " + SaveManager.Instance.Data.fruitBalance);
-        }
     }
 
     private void InitializeCollectibles()

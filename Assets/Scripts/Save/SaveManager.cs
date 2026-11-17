@@ -88,7 +88,15 @@ public class SaveManager : MonoBehaviour
             return;
         }
 
-        Data = JsonUtility.FromJson<SaveData>(json);
+        try
+        {
+            Data = JsonUtility.FromJson<SaveData>(json);
+        }
+        catch (System.ArgumentException)
+        {
+            Debug.LogWarning("Save data could not be read, starting with a fresh save.");
+            Data = null;
+        }
 
         if (Data == null)
         {
@@ -96,6 +104,21 @@ public class SaveManager : MonoBehaviour
         }
 
         EnsureDataListsExist();
+        SanitizeData();
+    }
+
+    private void SanitizeData()
+    {
+        Data.fruitBalance = Mathf.Max(0, Data.fruitBalance);
+
+        if (float.IsNaN(Data.bestTime) || float.IsInfinity(Data.bestTime) || Data.bestTime <= 0f)
+        {
+            Data.hasBestTime = false;
+            Data.bestTime = 0f;
+        }
+
+        Data.claimedFruitIds.RemoveAll(string.IsNullOrWhiteSpace);
+        Data.unlockedSkinIds.RemoveAll(string.IsNullOrWhiteSpace);
     }
 
     public bool HasClaimedFruit(string fruitId)
@@ -123,9 +146,6 @@ public class SaveManager : MonoBehaviour
 
         Save();
 
-        Debug.Log("New fruit claimed: " + fruitId);
-        Debug.Log("Fruit Balance: " + Data.fruitBalance);
-
         return true;
     }
 
@@ -143,12 +163,8 @@ public class SaveManager : MonoBehaviour
 
             Save();
 
-            Debug.Log("New best time: " + finalTime);
-
             return true;
         }
-
-        Debug.Log("Best time not improved. Final Time: " + finalTime + " Best Time: " + Data.bestTime);
 
         return false;
     }
@@ -213,9 +229,6 @@ public class SaveManager : MonoBehaviour
 
         Save();
 
-        Debug.Log("Skin unlocked: " + skinId);
-        Debug.Log("Fruit Balance: " + Data.fruitBalance);
-
         return true;
     }
 
@@ -232,8 +245,6 @@ public class SaveManager : MonoBehaviour
         Data.selectedSkinId = skinId;
 
         Save();
-
-        Debug.Log("Skin selected: " + skinId);
 
         return true;
     }

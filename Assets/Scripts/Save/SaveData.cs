@@ -4,6 +4,8 @@ using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
+    public int version = 1;
+
     public bool hasBestTime;
     public float bestTime;
 

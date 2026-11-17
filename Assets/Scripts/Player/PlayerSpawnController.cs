@@ -40,6 +40,7 @@ public class PlayerSpawnController : MonoBehaviour
             currentSpawnVfx = null;
         }
 
+        player.ResetStateForRespawn();
         player.SetControlEnabled(false);
         player.SetVisualVisible(false);
 

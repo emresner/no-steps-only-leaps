@@ -36,7 +36,7 @@ public class EndingCompleteUI : MonoBehaviour
 
         if (yourTimeText != null)
         {
-            yourTimeText.text = "YOUR TIME: " + FormatTime(finalTime);
+            yourTimeText.text = "YOUR TIME: " + GameTimer.FormatTime(finalTime);
         }
 
         if (bestTimeText != null)
@@ -76,7 +76,7 @@ public class EndingCompleteUI : MonoBehaviour
 
         string prefix = isNewBestTime ? "NEW BEST: " : "BEST TIME: ";
 
-        return prefix + FormatTime(saveData.bestTime);
+        return prefix + GameTimer.FormatTime(saveData.bestTime);
     }
 
     private int GetNewFruitCount()
@@ -101,14 +101,5 @@ public class EndingCompleteUI : MonoBehaviour
             return;
 
         sceneLoader.LoadMainMenu();
-    }
-
-    private string FormatTime(float time)
-    {
-        int minutes = Mathf.FloorToInt(time / 60f);
-        int seconds = Mathf.FloorToInt(time % 60f);
-        int milliseconds = Mathf.FloorToInt((time * 100f) % 100f);
-
-        return $"{minutes:00}:{seconds:00}.{milliseconds:00}";
     }
 }

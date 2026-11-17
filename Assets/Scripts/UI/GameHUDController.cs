@@ -49,7 +49,7 @@ public class GameHUDController : MonoBehaviour
         if (GameTimer.Instance == null)
             return;
 
-        timerText.text = FormatTime(GameTimer.Instance.ElapsedTime);
+        timerText.text = GameTimer.FormatTime(GameTimer.Instance.ElapsedTime);
     }
 
     private void OnFruitsChanged(int collectedCount, int totalCount)
@@ -63,14 +63,5 @@ public class GameHUDController : MonoBehaviour
             return;
 
         fruitsText.text = $"{collectedCount} / {totalCount}";
-    }
-
-    private string FormatTime(float time)
-    {
-        int minutes = Mathf.FloorToInt(time / 60f);
-        int seconds = Mathf.FloorToInt(time % 60f);
-        int milliseconds = Mathf.FloorToInt((time * 100f) % 100f);
-
-        return $"{minutes:00}:{seconds:00}.{milliseconds:00}";
     }
 }

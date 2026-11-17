@@ -71,9 +71,6 @@ public class EndingManager : MonoBehaviour
         {
             endingDialogueUI.StartDialogue(OnDialogueCompleted);
         }
-
-        Debug.Log("Ending started!");
-        Debug.Log("Final Time: " + FinalTime);
     }
 
     private IEnumerator WaitUntilPlayerLands(Player player)
@@ -129,7 +126,5 @@ public class EndingManager : MonoBehaviour
         {
             endingCompleteUI.Show(FinalTime);
         }
-
-        Debug.Log("Ending dialogue completed.");
     }
 }

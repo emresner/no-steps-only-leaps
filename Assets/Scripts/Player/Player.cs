@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private static readonly int IsGroundedHash = Animator.StringToHash("isGrounded");
+    private static readonly int YVelocityHash = Animator.StringToHash("yVelocity");
+    private static readonly int IsHitHash = Animator.StringToHash("isHit");
+    private static readonly int IsEndingWalkingHash = Animator.StringToHash("isEndingWalking");
+
     [Header("References")]
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Transform visualTransform;
@@ -50,6 +55,7 @@ public class Player : MonoBehaviour
     public int FacingDirection { get; private set; } = 1;
     public float CurrentJumpForce { get; private set; }
     public float CurrentHorizontalJumpForce { get; private set; }
+    public float ChargePercent { get; private set; }
     public bool CanControl { get; private set; } = true;
     public Vector2 HitVelocity { get; private set; }
 
@@ -63,6 +69,7 @@ public class Player : MonoBehaviour
     public float HardLandingHeightThreshold => hardLandingHeightThreshold;
     public float HitStateDuration => hitStateDuration;
     public bool CanTakeTrapHit => Time.time >= trapHitInvulnerabilityEndTime;
+    public bool IsGamePaused => PauseManager.Instance != null && PauseManager.Instance.IsPaused;
 
 
     public bool HasBufferedJump => jumpBufferTimer > 0f;
@@ -95,7 +102,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (CanControl)
+        if (CanControl && !IsGamePaused)
         {
             UpdateJumpBuffer();
             HandleFacingDirection();
@@ -174,16 +181,21 @@ public class Player : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        animator.SetBool("isGrounded", IsGroundDetected());
-        animator.SetFloat("yVelocity", Rigidbody.linearVelocity.y);
-        animator.SetBool("isHit", StateMachine.CurrentState == HitState);
-        animator.SetBool("isEndingWalking", isEndingWalking);
+        animator.SetBool(IsGroundedHash, IsGroundDetected());
+        animator.SetFloat(YVelocityHash, Rigidbody.linearVelocity.y);
+        animator.SetBool(IsHitHash, StateMachine.CurrentState == HitState);
+        animator.SetBool(IsEndingWalkingHash, isEndingWalking);
     }
 
     public void SetJumpForces(float verticalJumpForce, float horizontalJumpForce)
     {
         CurrentJumpForce = verticalJumpForce;
         CurrentHorizontalJumpForce = horizontalJumpForce;
+    }
+
+    public void SetChargePercent(float percent)
+    {
+        ChargePercent = percent;
     }
 
     public void ApplyAirMotionGravity()
@@ -374,6 +386,18 @@ public class Player : MonoBehaviour
         }
 
         SetControlEnabled(false);
+    }
+
+    public void ResetStateForRespawn()
+    {
+        ClearJumpBuffer();
+        ResetVisualTransform();
+        ResetGravityScale();
+
+        if (StateMachine.CurrentState == null || StateMachine.CurrentState == IdleState)
+            return;
+
+        StateMachine.ChangeState(IdleState);
     }
 
     public void SetControlEnabled(bool enabled)

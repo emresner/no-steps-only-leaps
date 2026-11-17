@@ -18,14 +18,14 @@ public class WaypointMover : MonoBehaviour
     {
         if (target == null)
         {
-            Debug.LogError("WaypointMover: Target atanmadý.");
+            Debug.LogError("WaypointMover: Target is not assigned.");
             enabled = false;
             return;
         }
 
         if (waypoints == null || waypoints.Length == 0)
         {
-            Debug.LogError("WaypointMover: Waypoint listesi boþ.");
+            Debug.LogError("WaypointMover: Waypoint list is empty.");
             enabled = false;
             return;
         }

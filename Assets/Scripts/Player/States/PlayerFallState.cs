@@ -13,7 +13,6 @@ public class PlayerFallState : PlayerState
         player.ApplyAirMotionGravity();
 
         fallStartY = player.transform.position.y;
-        Debug.Log("Entered Fall State");
     }
 
     public override void Update()

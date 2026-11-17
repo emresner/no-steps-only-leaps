@@ -42,7 +42,7 @@ public class IntroCameraController : MonoBehaviour
 
         while (timer < introDuration)
         {
-            timer += Time.unscaledDeltaTime;
+            timer += Time.deltaTime;
 
             float t = Mathf.Clamp01(timer / introDuration);
             t = Mathf.SmoothStep(0f, 1f, t);

@@ -15,8 +15,6 @@ public class PlayerChargeJumpState : PlayerState
         chargeDirection = player.FacingDirection;
 
         player.ResetVisualTransform();
-
-        Debug.Log("Entered Charge Jump State");
     }
 
     public override void Update()
@@ -31,6 +29,8 @@ public class PlayerChargeJumpState : PlayerState
         chargeTimer = Mathf.Clamp(chargeTimer, 0f, player.MaxChargeTime);
 
         float chargePercent = chargeTimer / player.MaxChargeTime;
+
+        player.SetChargePercent(chargePercent);
 
         float xScale = Mathf.Lerp(1f, 1.2f, chargePercent);
         float yScale = Mathf.Lerp(1f, 0.8f, chargePercent);
@@ -48,7 +48,7 @@ public class PlayerChargeJumpState : PlayerState
 
         player.VisualTransform.localPosition = position;
 
-        if (player.Input.JumpReleased)
+        if (player.Input.JumpReleased || !player.Input.JumpHeld)
         {
             float verticalJumpForce = Mathf.Lerp(
                 player.MinJumpForce,
@@ -70,6 +70,7 @@ public class PlayerChargeJumpState : PlayerState
 
     public override void Exit()
     {
+        player.SetChargePercent(0f);
         player.ResetVisualTransform();
     }
 }

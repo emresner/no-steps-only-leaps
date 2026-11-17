@@ -13,8 +13,6 @@ public class PlayerHitState : PlayerState
         hitTimer = 0f;
 
         player.Rigidbody.linearVelocity = player.HitVelocity;
-
-        Debug.Log("Entered Hit State");
     }
 
     public override void Update()

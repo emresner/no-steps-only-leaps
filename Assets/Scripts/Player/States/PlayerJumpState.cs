@@ -8,8 +8,6 @@ public class PlayerJumpState : PlayerState
 
     public override void Enter()
     {
-        Debug.Log("Entered Jump State");
-
         AudioManager.Instance?.PlayJump();
 
         player.ApplyAirMotionGravity();

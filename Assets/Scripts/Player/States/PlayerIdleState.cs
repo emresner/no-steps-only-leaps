@@ -9,8 +9,6 @@ public class PlayerIdleState : PlayerState
     public override void Enter()
     {
         player.ResetGravityScale();
-
-        Debug.Log("Entered Idle State");
     }
 
     public override void Update()

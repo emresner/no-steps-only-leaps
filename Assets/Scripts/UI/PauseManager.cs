@@ -11,10 +11,20 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private Button backToMenuButton;
     [SerializeField] private SceneLoader sceneLoader;
 
+    public static PauseManager Instance { get; private set; }
+
     public bool IsPaused { get; private set; }
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
         if (resumeButton != null)
         {
             resumeButton.onClick.AddListener(ResumeGame);

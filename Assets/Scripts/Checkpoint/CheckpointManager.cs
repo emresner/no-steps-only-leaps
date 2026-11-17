@@ -44,6 +44,9 @@ public class CheckpointManager : MonoBehaviour
 
     private void Update()
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
+
         if (inputManager.ReturnToCheckpointPressed)
         {
             TryReturnToCheckpoint();

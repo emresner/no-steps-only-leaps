@@ -27,7 +27,5 @@ public class EndingCameraController : MonoBehaviour
         endingCameraTarget.position = focusPosition;
 
         endingCameraObject.SetActive(true);
-
-        Debug.Log("Ending camera focused.");
     }
 }
